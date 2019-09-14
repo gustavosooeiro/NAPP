@@ -34,23 +34,10 @@ class ListaPedidoSerializer(serializers.ModelSerializer):
         items = ItensPedido.objects.filter(pedido=instance)
         return ItensPedidoSerializer(items, many=True).data
 
-class PedidoSerializer(serializers.ModelSerializer):
-    #itens_set=ItensPedidoSerializer(many=True)
-    cliente = serializers.PrimaryKeyRelatedField(many=False, queryset=Cliente.objects.all())
-    #cliente = serializers.CharField(source='cliente.nome')
-    produtos = ItensPedidoSerializer(many=True)
-    #produtos = serializers.PrimaryKeyRelatedField(many=True, queryset=ItensPedido.objects.all())
-
-    total = serializers.CharField(min_length=2, max_length=30, read_only=True)
-
-    class Meta:
-        model=Pedido
-        fields=('id', 'cliente', 'pedido_id', 'total', 'produtos')
-
-    def get_produtos(self, instance):
-        items = ItensPedido.objects.filter(pedido=instance)
-        return ItensPedidoSerializer(items, many=True).data
+class PedidoSerializer(ListaPedidoSerializer):
     
+    produtos = ItensPedidoSerializer(many=True)
+        
     def create(self, validated_data):
         cliente_dados = validated_data['cliente']
         produtos_dados = validated_data['produtos']
@@ -61,10 +48,8 @@ class PedidoSerializer(serializers.ModelSerializer):
         except ValueError:
             raise ValidationError({'produtos': 'Deve ser um produto já cadastrado!'})
         
-        pedido, created = Pedido.objects.create(cliente=cliente_dados)
+        pedido = Pedido.objects.create(cliente=cliente_dados)
         for produto_dados in produtos_dados:
-            print(produto_dados)
             ItensPedido.objects.create(pedido=pedido, **produto_dados)
+        self.produtos = super().get_produtos(pedido)
         return pedido
-
-
