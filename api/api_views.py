@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.exceptions import ValidationError
-from api.serializers import ProdutoSerializer, ClienteSerializer, PedidoSerializer
+from api.serializers import ProdutoSerializer, ClienteSerializer, PedidoSerializer, ListaPedidoSerializer
 from api.models import Produto, Cliente, Pedido
 
 class ListaProdutos(ListAPIView):
@@ -16,10 +16,12 @@ class ListaClientes(ListAPIView):
 
 class ListaPedidos(ListAPIView):
     queryset = Pedido.objects.all()
-    serializer_class = PedidoSerializer
+    serializer_class = ListaPedidoSerializer
 
 class CriaPedido(CreateAPIView):
-    serializer_class = ProdutoSerializer
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
+
 '''
     def create(self, request, *args, **kwargs):
         try: 

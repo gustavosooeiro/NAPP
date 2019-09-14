@@ -54,7 +54,7 @@ class Pedido(models.Model):
 
     cliente = models.ForeignKey(Cliente, models.DO_NOTHING, null=True, blank=True)
     pedido_id = models.CharField(max_length=30, default=incrementa_id_pedido, null=True, blank=True, editable=False)
-    status_pagamento = models.IntegerField(default=NAOPAGO, choices=STATUS_PAGAMENTO, null=False)
+    status_pagamento = models.IntegerField(default=NAOPAGO, choices=STATUS_PAGAMENTO, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -88,7 +88,7 @@ class Pedido(models.Model):
 class ItensPedido(models.Model):
 
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE,related_name='itemspedido', null=True)
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, null=True)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='produtos', null=True)
     preco = models.DecimalField(max_digits=14, decimal_places=2, default=0.00)
     quantidade = models.IntegerField(default=1, null=False)
     created = models.DateTimeField(auto_now_add=True)
