@@ -2,7 +2,7 @@ from .models import Produto, Cliente, Pedido, ItensPedido
 from rest_framework import serializers
 
 class ProdutoSerializer(serializers.ModelSerializer):
-    preco_unitario = serializers.DecimalField(min_value=0.01, decimal_places=2, max_digits=None)
+    preco_unitario = serializers.DecimalField(min_value=0.01, decimal_places=2, max_digits=22)
     class Meta:
         model=Produto
         fields=('id', 'nome', 'preco_unitario', 'multiplo')
@@ -14,17 +14,17 @@ class ClienteSerializer(serializers.ModelSerializer):
 
 class ItensPedidoSerializer(serializers.ModelSerializer):
     produto = serializers.PrimaryKeyRelatedField(many=False, queryset=Produto.objects.all())
-    preco = serializers.DecimalField(min_value=0.01, decimal_places=2, max_digits=None)
+    preco = serializers.DecimalField(min_value=0.01, decimal_places=2, max_digits=22, coerce_to_string=False)
     class Meta:
         model=ItensPedido
         fields=('pedido', 'produto', 'preco', 'quantidade')
 
 class ListaPedidoSerializer(serializers.ModelSerializer):
 
-    cliente = serializers.PrimaryKeyRelatedField(many=False, queryset=Cliente.objects.all())
+    cliente = ClienteSerializer
     produtos = serializers.SerializerMethodField()
 
-    total = serializers.CharField(min_length=2, max_length=30, read_only=True)
+    total = serializers.DecimalField(max_digits=22, decimal_places=2, coerce_to_string=False) #CharField(min_length=2, max_length=30, read_only=True)
 
     class Meta:
         model=Pedido
@@ -34,20 +34,11 @@ class ListaPedidoSerializer(serializers.ModelSerializer):
         items = ItensPedido.objects.filter(pedido=instance)
         return ItensPedidoSerializer(items, many=True).data
 
-class PedidoSerializer(serializers.ModelSerializer):
+class PedidoSerializer(ListaPedidoSerializer):
     
     cliente = serializers.PrimaryKeyRelatedField(many=False, queryset=Cliente.objects.all())
     produtos = ItensPedidoSerializer(many=True)
-    total = serializers.CharField(min_length=2, max_length=30, read_only=True)
 
-    class Meta:
-        model=Pedido
-        fields=('id', 'cliente', 'total', 'produtos')
-
-    def get_produtos(self, instance):
-        items = ItensPedido.objects.filter(pedido=instance)
-        return ItensPedidoSerializer(items, many=True).data
-    
     def create(self, validated_data):
         cliente_dados = validated_data['cliente']
         produtos_dados = validated_data['produtos']
