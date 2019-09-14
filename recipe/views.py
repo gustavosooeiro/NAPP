@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 
 from .models import Tag, Ingredient, Recipe
-from .serializers import TagSerializer, IngredientSerializer, RecipeSerializer
+from .serializers import TagSerializer, IngredientSerializer, RecipeSerializer, RecipeDetailSerializer
 
 
 class BaseRecipeAttrViewSet(viewsets.GenericViewSet, 
@@ -35,3 +35,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Return objects ordered by name"""
         return self.queryset.all().order_by('title')
+    
+    def get_serializer(self):
+        """Return apropriate serializer class"""
+        if self.action == 'retrieve':
+            return RecipeDetailSerializer
+        return RecipeSerializer
