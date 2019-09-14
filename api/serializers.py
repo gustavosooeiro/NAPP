@@ -35,17 +35,14 @@ class ListaPedidoSerializer(serializers.ModelSerializer):
         return ItensPedidoSerializer(items, many=True).data
 
 class PedidoSerializer(serializers.ModelSerializer):
-    #itens_set=ItensPedidoSerializer(many=True)
+    
     cliente = serializers.PrimaryKeyRelatedField(many=False, queryset=Cliente.objects.all())
-    #cliente = serializers.CharField(source='cliente.nome')
     produtos = ItensPedidoSerializer(many=True)
-    #produtos = serializers.PrimaryKeyRelatedField(many=True, queryset=ItensPedido.objects.all())
-
     total = serializers.CharField(min_length=2, max_length=30, read_only=True)
 
     class Meta:
         model=Pedido
-        fields=('id', 'cliente', 'pedido_id', 'total', 'produtos')
+        fields=('id', 'cliente', 'total', 'produtos')
 
     def get_produtos(self, instance):
         items = ItensPedido.objects.filter(pedido=instance)
