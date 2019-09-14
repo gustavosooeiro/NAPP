@@ -3,34 +3,26 @@ from rest_framework import viewsets, mixins
 from .models import Tag, Ingredient
 from .serializers import TagSerializer, IngredientSerializer
 
-class TagViewSet(viewsets.GenericViewSet, 
+
+class BaseRecipeAttrViewSet(viewsets.GenericViewSet, 
                  mixins.ListModelMixin,
                  mixins.CreateModelMixin):
-    """Manage tags in the database"""
+    """Base ViewSet for recipes"""
 
+    def get_queryset(self):
+        """Return objects ordered by name"""
+        return self.queryset.all().order_by('name')
+
+    def perform_create(self, serializer):
+        """Create a new object"""
+        serializer.save()
+
+class TagViewSet(BaseRecipeAttrViewSet):
+    """Manage tags in the database"""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
-    def get_queryset(self):
-        """Return objects ordered by name"""
-        return self.queryset.all().order_by('name')
-
-    def perform_create(self, serializer):
-        """Create a new tag"""
-        serializer.save()
-
-class IngredientViewSet(viewsets.GenericViewSet, 
-                 mixins.ListModelMixin,
-                 mixins.CreateModelMixin):
+class IngredientViewSet(BaseRecipeAttrViewSet):
     """Manage ingredients in the database"""
-
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-
-    def get_queryset(self):
-        """Return objects ordered by name"""
-        return self.queryset.all().order_by('name')
-
-    def perform_create(self, serializer):
-        """Create a new tag"""
-        serializer.save()
