@@ -36,7 +36,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """Return objects ordered by name"""
         return self.queryset.all().order_by('title')
     
-    def get_serializer(self):
+    def get_serializer_class(self):
         """Return apropriate serializer class"""
         if self.action == 'retrieve':
             return RecipeDetailSerializer
