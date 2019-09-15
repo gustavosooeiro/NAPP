@@ -24,7 +24,7 @@ class ListaPedidoSerializer(serializers.ModelSerializer):
     cliente = ClienteSerializer
     produtos = serializers.SerializerMethodField()
 
-    total = serializers.DecimalField(max_digits=22, decimal_places=2, coerce_to_string=False) #CharField(min_length=2, max_length=30, read_only=True)
+    total = serializers.DecimalField(max_digits=22, decimal_places=2, read_only=True) #CharField(min_length=2, max_length=30, read_only=True)
 
     class Meta:
         model=Pedido

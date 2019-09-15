@@ -31,6 +31,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Manage recipes in the database"""
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    
 
     def get_queryset(self):
         """Return objects ordered by name"""
