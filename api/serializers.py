@@ -49,9 +49,8 @@ class PedidoSerializer(ListaPedidoSerializer):
         except ValueError:
             raise ValidationError({'produtos': 'Deve ser um produto já cadastrado!'})
         
-        pedido, created = Pedido.objects.create(cliente=cliente_dados)
+        pedido = Pedido.objects.create(cliente=cliente_dados)
         for produto_dados in produtos_dados:
-            print(produto_dados)
             ItensPedido.objects.create(pedido=pedido, **produto_dados)
         return pedido
 

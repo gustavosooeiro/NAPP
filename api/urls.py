@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register('pedidos', PedidoViewSet)
 
-app_name = 'api'
+#app_name = 'api'
 
 urlpatterns = [ 
     path('', include(router.urls))
