@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'udemydrf.urls'
+ROOT_URLCONF = 'napp.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'udemydrf.wsgi.application'
+WSGI_APPLICATION = 'napp.wsgi.application'
 
 
 # Database
