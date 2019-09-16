@@ -14,10 +14,10 @@ class ClienteSerializer(serializers.ModelSerializer):
 
 class ItensPedidoSerializer(serializers.ModelSerializer):
     produto = serializers.PrimaryKeyRelatedField(many=False, queryset=Produto.objects.all())
-    preco = serializers.DecimalField(min_value=0.01, decimal_places=2, max_digits=22, coerce_to_string=False)
+    preco = serializers.DecimalField(min_value=0.01, decimal_places=2, max_digits=22)
     class Meta:
         model=ItensPedido
-        fields=('pedido', 'produto', 'preco', 'quantidade')
+        fields=('produto', 'preco', 'quantidade')
 
 class PedidoSerializer(serializers.ModelSerializer):
     
@@ -40,8 +40,11 @@ class PedidoSerializer(serializers.ModelSerializer):
             raise ValidationError({'produtos': 'Deve ser um produto já cadastrado!'})
         
         pedido = Pedido.objects.create(cliente=cliente_dados)
+
         for produto_dados in produtos_dados:
             ItensPedido.objects.create(pedido=pedido, **produto_dados)
+        
+        pedido.produtos = ItensPedido.objects.filter(pedido=pedido)        
         return pedido
 
 
