@@ -39,12 +39,6 @@ class ItensPedidoSerializer(serializers.ModelSerializer):
                                     instance.produto.preco_unitario, 
                                     False)
 
-<<<<<<< HEAD
-class PedidoSerializer(ListaPedidoSerializer):
-    
-    produtos = ItensPedidoSerializer(many=True)
-        
-=======
 class PedidoSerializer(serializers.ModelSerializer):
     """Pedido serializer para operações de POST"""
     cliente = serializers.PrimaryKeyRelatedField(many=False, queryset=Cliente.objects.all())
@@ -55,7 +49,6 @@ class PedidoSerializer(serializers.ModelSerializer):
         model=Pedido
         fields=('id', 'cliente', 'total', 'produtos')
 
->>>>>>> using-viewset
     def create(self, validated_data):
         cliente_dados = validated_data['cliente']
         produtos_dados = validated_data['produtos']
@@ -64,13 +57,6 @@ class PedidoSerializer(serializers.ModelSerializer):
         valida_produtos(produtos_dados)
 
         
-<<<<<<< HEAD
-        pedido = Pedido.objects.create(cliente=cliente_dados)
-        for produto_dados in produtos_dados:
-            ItensPedido.objects.create(pedido=pedido, **produto_dados)
-        self.produtos = super().get_produtos(pedido)
-        return pedido
-=======
         for produto_dados in produtos_dados:
             quantidade = produto_dados['quantidade']
             preco = produto_dados['preco']
@@ -109,4 +95,3 @@ class ListaPedidoSerializer(PedidoSerializer):
         items = ItensPedido.objects.filter(pedido=instance)
         return ItensPedidoSerializer(items, many=True).data
 
->>>>>>> using-viewset
