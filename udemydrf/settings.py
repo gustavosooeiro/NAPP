@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'recipe',
     'api',
 ]
 
@@ -125,6 +124,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-""" REST_FRAMEWORK = {
-    'COERCE_DECIMAL_TO_STRING': False
-} """

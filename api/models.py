@@ -6,8 +6,6 @@ from api.utils import formataPreco, formataReal, formataReal2
 
 from collections import Counter
 
-# Create your models here.
-
 class Cliente(models.Model):
     def __str__(self):
         return self.nome
@@ -59,19 +57,6 @@ class Pedido(models.Model):
 
     def __str__(self):
         return '%s' % (self.pedido_id)
-
-    def clean(self):
-        itens = ItensPedido.objects.filter(pedido=self.pk)
-        for item in itens:
-            if item.item.multiplo:
-                if item.item.multiplo==2:
-                    pass
-        # Don't allow draft entries to have a pub_date.
-        if self.status == 'draft' and self.pub_date is not None:
-            raise ValidationError(_('Draft entries may not have a publication date.'))
-        # Set the pub_date for published items if it hasn't been set already.
-        if self.status == 'published' and self.pub_date is None:
-            self.pub_date = datetime.date.today()
     
     def total(self):
         itens = ItensPedido.objects.filter(pedido=self.pk)
@@ -82,7 +67,6 @@ class Pedido(models.Model):
         itens = ItensPedido.objects.filter(pedido=self.pk)
         return format_html_join('\n', "{} ({} x {} = {})<br/>", 
                                 ((item.produto.nome,str(item.quantidade),item.preco,str(item.preco * item.quantidade)) for item in itens))
-                                #((item.item.nome,str(item.quantidade),item.preco,str(item.preco * item.quantidade)) for item in ItensPedido.objects.filter(pedido=self.pk).order_by('item__nome')))
     
 
 class ItensPedido(models.Model):

@@ -1,8 +1,7 @@
-from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.exceptions import ValidationError
+from rest_framework.generics import ListAPIView
 from api.serializers import ProdutoSerializer, ClienteSerializer, PedidoSerializer, ListaPedidoSerializer
 from api.models import Produto, Cliente, Pedido
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 
 class ListaProdutos(ListAPIView):
     queryset = Produto.objects.all()
@@ -13,21 +12,20 @@ class ListaClientes(ListAPIView):
     serializer_class = ClienteSerializer
 
 class PedidoViewSet(viewsets.ModelViewSet):
-    """Manage recipes in the database"""
+    """Gerencia Pedidos no banco de dados"""
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
 
     def get_queryset(self):
-        """Return objects ordered by name"""
+        """Retorna os objetos"""
         return self.queryset.all()
     
     def get_serializer_class(self):
-        """Return apropriate serializer class"""
-        print(self.action)
+        """Retorna os serializers mais apropriados"""
         if self.action in ('retrieve', 'list', 'update', 'partial_update'):
             return ListaPedidoSerializer
         return PedidoSerializer
 
     def perform_create(self, serializer):
-        """Create a new Pedido"""
+        """Cria um novo Pedido"""
         serializer.save()
